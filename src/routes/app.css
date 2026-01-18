@@ -1,0 +1,19 @@
+:root {
+    --color-base: #1B1620;
+    --color-background: #261F2D;
+    --color-surface: #32293B;
+    --color-foreground: #C1ACD7;
+    --color-accent: #8A47D1;
+    --color-error: #d3494b;
+}
+
+body {
+    background-color: var(--color-base);
+    color: var(--color-foreground);
+    margin: 0;
+    font-family: 'Lexend', sans-serif
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}

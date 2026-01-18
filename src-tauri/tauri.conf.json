@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "fullscreen": false,
         "title": "mosaic",
         "width": 800,
         "height": 600
