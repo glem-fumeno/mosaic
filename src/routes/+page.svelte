@@ -3,6 +3,8 @@
   import Icon from "../lib/icon.svelte";
 
   let width = $state(10);
+  let dialogText = $state("");
+  let debug = $state(false);
 
   type TileState = "active" | "inactive" | "disabled";
 
@@ -27,6 +29,10 @@
 
   function changeState(state: TileState) {
     currentState = state;
+  }
+
+  function getChangeState(state: TileState) {
+    return () => changeState(state);
   }
 
   function reset() {
@@ -58,7 +64,9 @@
     let tile = tiles[y][x];
     tile.state = currentState;
     if (tiles.flat().every((tile) => tile.innerState === tile.state)) {
-      reset();
+      if (dialogText !== "You win!") {
+        openModal("You win!");
+      }
     }
   }
 
@@ -142,15 +150,53 @@
         });
     }
   }
+
+  function openModal(text: string) {
+    const dialog = document.querySelector("dialog");
+    dialogText = text;
+    dialog?.showModal();
+  }
+  function closeModal() {
+    const dialog = document.querySelector("dialog");
+    dialog?.close();
+  }
 </script>
 
 <div class="page">
+  <dialog>
+    <div class="dialog-wrapper">
+      <h2
+        ondblclick={() => {
+          debug = !debug;
+        }}
+      >
+        {dialogText}
+      </h2>
+      <button onclick={closeModal}>
+        <Icon name="close" size={24} />
+        <span>Close</span>
+      </button>
+      <button
+        onclick={() => {
+          closeModal();
+          reset();
+        }}
+      >
+        <Icon name="autorenew" size={24} />
+        <span>Restart</span>
+      </button>
+    </div>
+  </dialog>
   <header>
     <button>
       <Icon name="arrow_back" />
     </button>
     <h1>Mosaic</h1>
-    <button>
+    <button
+      onclick={() => {
+        openModal("Options");
+      }}
+    >
       <Icon name="settings" />
     </button>
   </header>
@@ -163,7 +209,7 @@
     >
       {#each tiles.flat() as tile}
         <button
-          class={`tile ${tile.state} status-${getTileStatus(tile)}`}
+          class={`tile ${tile.state} status-${getTileStatus(tile)} ${debug ? "debug" : ""} inner-${tile.innerState}`}
           onclick={() => tileOnClick(tile.position.x, tile.position.y)}
         >
           <span>
@@ -176,19 +222,22 @@
   <footer>
     <div class="buttons">
       <button
-        onclick={() => changeState("active")}
+        ontouchstart={getChangeState("active")}
+        onclick={getChangeState("active")}
         class={currentState === "active" ? "active" : ""}
       >
         <Icon name="square" color="var(--color-accent)" />
       </button>
       <button
-        onclick={() => changeState("inactive")}
+        ontouchstart={getChangeState("inactive")}
+        onclick={getChangeState("inactive")}
         class={currentState === "inactive" ? "active" : ""}
       >
         <Icon name="square" color="var(--color-foreground)" />
       </button>
       <button
-        onclick={() => changeState("disabled")}
+        ontouchstart={getChangeState("disabled")}
+        onclick={getChangeState("disabled")}
         class={currentState === "disabled" ? "active" : ""}
       >
         <Icon name="close" />
@@ -203,6 +252,52 @@
     flex-direction: column;
     height: 100vh;
     touch-action: none;
+  }
+  dialog {
+    border: none;
+    background-color: var(--color-base);
+    color: var(--color-foreground);
+    border-radius: 1rem;
+
+    &::backdrop {
+      background-color: oklch(from var(--color-base) l c h / 0.3);
+      transition:
+        display 0.7s allow-discrete,
+        overlay 0.7s allow-discrete,
+        background-color 0.7s;
+    }
+
+    .dialog-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+      grid-column: 1 / 3;
+    }
+
+    button {
+      border: none;
+      background-color: var(--color-background);
+      color: var(--color-foreground);
+      padding: 1rem;
+      height: 100%;
+      border-radius: 100vw;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &:hover,
+      &:active {
+        background-color: var(--color-surface);
+      }
+    }
   }
   header {
     display: flex;
@@ -244,20 +339,22 @@
     }
 
     button {
+      --button-color: var(--color-background);
       border: none;
-      background-color: var(--color-background);
+      background-color: var(--button-color);
       color: var(--color-foreground);
       padding: 1rem;
       aspect-ratio: 1;
       height: 100%;
       border-radius: 100vw;
+      cursor: pointer;
 
       &:hover,
       &:active {
-        background-color: var(--color-surface);
+        background-color: var(--button-color);
       }
       &.active {
-        background-color: var(--color-surface);
+        --button-color: var(--color-surface);
       }
     }
   }
@@ -288,6 +385,17 @@
     font: inherit;
     container-type: inline-size;
     padding: 0;
+
+    &.debug {
+      border: 1px solid var(--inner-color);
+    }
+
+    &.inner-active {
+      --inner-color: var(--color-accent);
+    }
+    &.inner-inactive {
+      --inner-color: var(--color-foreground);
+    }
 
     &.active {
       --tile-color: var(--color-accent);
