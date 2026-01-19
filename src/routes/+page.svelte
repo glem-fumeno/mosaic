@@ -22,7 +22,17 @@
   };
 
   let tiles = $state<Tile[][]>([]);
-  onMount(reset);
+  function saveTiles() {
+    window.localStorage.setItem("tiles", JSON.stringify(tiles));
+  }
+  onMount(() => {
+    const tileLoad = window.localStorage.getItem("tiles");
+    if (tileLoad === null) {
+      reset();
+      return;
+    }
+    tiles = JSON.parse(tileLoad);
+  });
   let newState = $state<TileState>("active");
   let validTiles: Set<number> = $state(new Set([]));
   let currentState = $state<TileState>("active");
@@ -59,6 +69,7 @@
     while (!tiles.flat().every((tile) => tile.innerState !== "disabled")) {
       randomizeTiles();
     }
+    saveTiles();
   }
   function tileOnClick(x: number, y: number) {
     let tile = tiles[y][x];
@@ -68,6 +79,7 @@
         openModal("You win!");
       }
     }
+    saveTiles();
   }
 
   function random(max: number) {
