@@ -1,129 +1,42 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Icon from "../lib/icon.svelte";
+  import { isSolvable, reset, type Tile, type TileState } from "./mosaic";
 
   let width = $state(10);
   let dialogText = $state("");
-  let debug = $state(false);
-
-  type TileState = "active" | "inactive" | "disabled";
-
-  type Position = {
-    x: number;
-    y: number;
-  };
-
-  type Tile = {
-    num?: number;
-    position: Position;
-    state: TileState;
-    innerState: TileState;
-    neighbours: Position[];
-  };
-
+  let debugClass = $state<"debug" | "">("");
+  let currentState = $state<TileState>("active");
   let tiles = $state<Tile[][]>([]);
+  let dialog = $state<HTMLDialogElement>()!;
+
   function saveTiles() {
     window.localStorage.setItem("tiles", JSON.stringify(tiles));
   }
-  onMount(() => {
-    const tileLoad = window.localStorage.getItem("tiles");
-    if (tileLoad === null) {
-      reset();
-      return;
-    }
-    tiles = JSON.parse(tileLoad);
-  });
-  let newState = $state<TileState>("active");
-  let validTiles: Set<number> = $state(new Set([]));
-  let currentState = $state<TileState>("active");
-
+  function toggleDebug() {
+    debugClass = debugClass === "" ? "debug" : "";
+  }
+  function resetGrid() {
+    tiles = reset(width);
+    saveTiles();
+    dialogText = "";
+  }
   function changeState(state: TileState) {
     currentState = state;
   }
 
-  function getChangeState(state: TileState) {
-    return () => changeState(state);
-  }
-
-  function reset() {
-    tiles = [];
-    for (let y = 0; y < width; y++) {
-      tiles.push([]);
-      for (let x = 0; x < width; x++) {
-        let tile: Tile = {
-          position: { x, y },
-          state: "disabled",
-          innerState: "disabled",
-          neighbours: [],
-        };
-        for (let i = Math.max(y - 1, 0); i < Math.min(y + 2, width); i++) {
-          for (let j = Math.max(x - 1, 0); j < Math.min(x + 2, width); j++) {
-            tile.neighbours.push({ x: j, y: i });
-          }
-        }
-        tiles.at(-1)!.push(tile);
-      }
-    }
-    newState = "active";
-    validTiles = new Set([]);
-    while (!tiles.flat().every((tile) => tile.innerState !== "disabled")) {
-      randomizeTiles();
-    }
-    saveTiles();
-  }
   function tileOnClick(x: number, y: number) {
     let tile = tiles[y][x];
+    if (tile.state === currentState) return;
     tile.state = currentState;
+    saveTiles();
+  }
+  function checkWin() {
     if (tiles.flat().every((tile) => tile.innerState === tile.state)) {
       if (dialogText !== "You win!") {
         openModal("You win!");
       }
     }
-    saveTiles();
-  }
-
-  function random(max: number) {
-    return Math.floor(Math.random() * max);
-  }
-
-  function randomizeTiles() {
-    let failed = true;
-    let tile: Tile, count: number;
-    let toFix: Tile[] = [];
-    do {
-      do {
-        if (validTiles.size < 1) {
-          tile = tiles[random(tiles.length)][random(tiles.length)];
-        } else {
-          const p = [...validTiles][random(validTiles.size)];
-          const y = p % width;
-          const x = (p - y) / width;
-          tile = tiles[y][x];
-        }
-      } while (tile.num !== undefined);
-      toFix.forEach((tile) => {
-        tile.innerState = "disabled";
-      });
-      toFix = [];
-      count = 0;
-      tile.neighbours.forEach(({ x, y }) => {
-        if (tiles[y][x].innerState === "disabled") {
-          tiles[y][x].innerState = newState;
-          toFix.push(tiles[y][x]);
-          failed = false;
-        }
-        if (tiles[y][x].innerState === "active") {
-          count++;
-        }
-      });
-    } while (failed || random(100) <= 20 * Math.abs(4.5 - count));
-    tile.num = count;
-    newState = newState === "active" ? "inactive" : "active";
-    tile.neighbours.forEach(({ x, y }) => {
-      tiles[y][x].neighbours.forEach((neighbour) => {
-        validTiles.add(neighbour.x * width + neighbour.y);
-      });
-    });
   }
 
   function getTileStatus(tile: Tile): "error" | "solved" | "none" {
@@ -136,18 +49,12 @@
     const disabled = tile.neighbours.filter(
       ({ x, y }) => tiles[y][x].state === "disabled",
     );
-    if (tile.num === undefined) {
-      return "none";
-    }
-    if (active.length > tile.num) {
-      return "error";
-    }
-    if (inactive.length > tile.neighbours.length - tile.num) {
-      return "error";
-    }
-    if (disabled.length === 0) {
-      return "solved";
-    }
+
+    if (tile.num === undefined) return "none";
+    if (active.length > tile.num) return "error";
+    if (inactive.length > tile.neighbours.length - tile.num) return "error";
+    if (disabled.length === 0) return "solved";
+
     return "none";
   }
 
@@ -164,24 +71,26 @@
   }
 
   function openModal(text: string) {
-    const dialog = document.querySelector("dialog");
     dialogText = text;
-    dialog?.showModal();
+    dialog.showModal();
   }
   function closeModal() {
-    const dialog = document.querySelector("dialog");
-    dialog?.close();
+    dialog.close();
   }
+  onMount(() => {
+    const tileLoad = window.localStorage.getItem("tiles");
+    if (tileLoad === null) {
+      resetGrid();
+      return;
+    }
+    tiles = JSON.parse(tileLoad);
+  });
 </script>
 
 <div class="page">
-  <dialog>
+  <dialog bind:this={dialog} closedby="any">
     <div class="dialog-wrapper">
-      <h2
-        ondblclick={() => {
-          debug = !debug;
-        }}
-      >
+      <h2 ondblclick={toggleDebug}>
         {dialogText}
       </h2>
       <button onclick={closeModal}>
@@ -191,7 +100,7 @@
       <button
         onclick={() => {
           closeModal();
-          reset();
+          resetGrid();
         }}
       >
         <Icon name="autorenew" size={24} />
@@ -200,7 +109,7 @@
     </div>
   </dialog>
   <header>
-    <button>
+    <button onclick={() => isSolvable($state.snapshot(tiles))}>
       <Icon name="arrow_back" />
     </button>
     <h1>Mosaic</h1>
@@ -218,10 +127,11 @@
       style:grid-template-columns={`repeat(${width}, 1fr)`}
       ontouchmove={touchMove}
       ontouchstart={touchMove}
+      ontouchend={checkWin}
     >
       {#each tiles.flat() as tile}
         <button
-          class={`tile ${tile.state} status-${getTileStatus(tile)} ${debug ? "debug" : ""} inner-${tile.innerState}`}
+          class={`tile ${tile.state} status-${getTileStatus(tile)} ${debugClass ? "debug" : ""} inner-${tile.innerState}`}
           onclick={() => tileOnClick(tile.position.x, tile.position.y)}
         >
           <span>
@@ -234,22 +144,22 @@
   <footer>
     <div class="buttons">
       <button
-        ontouchstart={getChangeState("active")}
-        onclick={getChangeState("active")}
+        ontouchstart={() => changeState("active")}
+        onclick={() => changeState("active")}
         class={currentState === "active" ? "active" : ""}
       >
         <Icon name="square" color="var(--color-accent)" />
       </button>
       <button
-        ontouchstart={getChangeState("inactive")}
-        onclick={getChangeState("inactive")}
+        ontouchstart={() => changeState("inactive")}
+        onclick={() => changeState("inactive")}
         class={currentState === "inactive" ? "active" : ""}
       >
         <Icon name="square" color="var(--color-foreground)" />
       </button>
       <button
-        ontouchstart={getChangeState("disabled")}
-        onclick={getChangeState("disabled")}
+        ontouchstart={() => changeState("disabled")}
+        onclick={() => changeState("disabled")}
         class={currentState === "disabled" ? "active" : ""}
       >
         <Icon name="close" />
@@ -346,7 +256,7 @@
     .buttons {
       background-color: var(--color-background);
       border-radius: 100vw;
-      padding: 0.25rem 0.25rem;
+      padding: 0.5rem 0.5rem;
       margin-block: 2rem;
     }
 
@@ -355,7 +265,7 @@
       border: none;
       background-color: var(--button-color);
       color: var(--color-foreground);
-      padding: 1rem;
+      padding: 0.5rem;
       aspect-ratio: 1;
       height: 100%;
       border-radius: 100vw;
@@ -382,7 +292,7 @@
     background-color: var(--color-background);
     display: grid;
     gap: 3px;
-    padding: 8px;
+    padding: 1rem;
   }
   .tile {
     --tile-color: var(--color-surface);
