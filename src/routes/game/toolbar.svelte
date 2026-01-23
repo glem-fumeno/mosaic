@@ -1,33 +1,28 @@
 <script lang="ts">
+  import game from "$lib/game.svelte";
   import Icon from "$lib/icon.svelte";
-  import type { TileState } from "./mosaic";
-
-  let { currentTool = $bindable() } = $props<{ currentTool: TileState }>();
-  function changeTool(tool: TileState) {
-    currentTool = tool;
-  }
 </script>
 
 <div class="buttons">
   <div class="highlight"></div>
   <button
-    ontouchstart={() => changeTool("active")}
-    onclick={() => changeTool("active")}
-    class={currentTool === "active" ? "active" : ""}
+    ontouchstart={() => game.setTool("active")}
+    onclick={() => game.setTool("active")}
+    class={game.currentTool === "active" ? "active" : ""}
   >
     <Icon name="square" color="var(--color-accent)" />
   </button>
   <button
-    ontouchstart={() => changeTool("inactive")}
-    onclick={() => changeTool("inactive")}
-    class={currentTool === "inactive" ? "active" : ""}
+    ontouchstart={() => game.setTool("inactive")}
+    onclick={() => game.setTool("inactive")}
+    class={game.currentTool === "inactive" ? "active" : ""}
   >
     <Icon name="square" color="var(--color-foreground)" />
   </button>
   <button
-    ontouchstart={() => changeTool("disabled")}
-    onclick={() => changeTool("disabled")}
-    class={currentTool === "disabled" ? "active" : ""}
+    ontouchstart={() => game.setTool("disabled")}
+    onclick={() => game.setTool("disabled")}
+    class={game.currentTool === "disabled" ? "active" : ""}
   >
     <Icon name="close" />
   </button>
@@ -70,5 +65,14 @@
     left: anchor(left);
     transition: 200ms cubic-bezier(0.16, 1, 0.3, 1) left;
     z-index: 1;
+  }
+
+  @supports not (position-anchor: --highlight-anchor) {
+    .highlight {
+      visibility: hidden;
+    }
+    button.active {
+      background-color: var(--color-surface);
+    }
   }
 </style>

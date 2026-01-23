@@ -2,74 +2,20 @@
   import { onMount } from "svelte";
   import Icon from "$lib/icon.svelte";
   import { page } from "$app/state";
-  import { reset, type Tile, type TileState } from "./mosaic";
   import { replaceState } from "$app/navigation";
   import Toolbar from "./toolbar.svelte";
   import Button from "$lib/button.svelte";
+  import Board from "./board.svelte";
+  import game from "$lib/game.svelte";
 
-  let width = $state(10);
   let dialogText = $state("");
-  let debugClass = $state<"debug" | "">("");
-  let currentTool = $state<TileState>("active");
-  let tiles = $state<Tile[][]>([]);
   let dialog = $state<HTMLDialogElement>()!;
 
-  function saveTiles() {
-    window.localStorage.setItem("tiles", JSON.stringify(tiles));
-  }
-  function toggleDebug() {
-    debugClass = debugClass === "" ? "debug" : "";
-  }
-  function resetGrid() {
-    tiles = reset(width);
-    saveTiles();
-    dialogText = "";
-  }
-
-  function tileOnClick(x: number, y: number) {
-    let tile = tiles[y][x];
-    if (tile.state === currentTool) return;
-    tile.state = currentTool;
-    saveTiles();
-  }
-  function checkWin() {
-    if (tiles.flat().every((tile) => tile.innerState === tile.state)) {
-      if (dialogText !== "You win!") {
-        openModal("You win!");
-      }
+  $effect(() => {
+    if (game.gameState == "won") {
+      openModal("You win!");
     }
-  }
-
-  function getTileStatus(tile: Tile): "error" | "solved" | "none" {
-    const active = tile.neighbours.filter(
-      ({ x, y }) => tiles[y][x].state === "active",
-    );
-    const inactive = tile.neighbours.filter(
-      ({ x, y }) => tiles[y][x].state === "inactive",
-    );
-    const disabled = tile.neighbours.filter(
-      ({ x, y }) => tiles[y][x].state === "disabled",
-    );
-
-    if (tile.num === undefined) return "none";
-    if (active.length > tile.num) return "error";
-    if (inactive.length > tile.neighbours.length - tile.num) return "error";
-    if (disabled.length === 0) return "solved";
-
-    return "none";
-  }
-
-  function touchMove(e: TouchEvent) {
-    for (let i = 0; i < e.touches.length; i++) {
-      const touch = e.touches.item(i)!;
-      let elem = document.elementsFromPoint(touch.clientX, touch.clientY);
-      elem
-        .filter((el) => el.classList.contains("tile"))
-        .forEach((el) => {
-          (el as HTMLButtonElement).click();
-        });
-    }
-  }
+  });
 
   function openModal(text: string) {
     dialogText = text;
@@ -81,18 +27,18 @@
   onMount(() => {
     const tileLoad = window.localStorage.getItem("tiles");
     if (tileLoad === null || page.url.searchParams.get("reset") === "") {
-      resetGrid();
+      game.resetGrid();
       replaceState("/game", {});
       return;
     }
-    tiles = JSON.parse(tileLoad);
+    game.loadTiles(tileLoad);
   });
 </script>
 
 <div class="page">
   <dialog bind:this={dialog} closedby="any">
     <div class="dialog-wrapper">
-      <h2 ondblclick={toggleDebug}>
+      <h2 ondblclick={game.toggleDebug}>
         {dialogText}
       </h2>
       <Button size="1.25rem" onclick={closeModal}>
@@ -103,7 +49,7 @@
         size="1.25rem"
         onclick={() => {
           closeModal();
-          resetGrid();
+          game.resetGrid();
         }}
       >
         <Icon name="autorenew" size={24} />
@@ -127,27 +73,10 @@
     </Button>
   </header>
   <main>
-    <div
-      class="grid"
-      style:grid-template-columns={`repeat(${width}, 1fr)`}
-      ontouchmove={touchMove}
-      ontouchstart={touchMove}
-      ontouchend={checkWin}
-    >
-      {#each tiles.flat() as tile}
-        <button
-          class={`tile ${tile.state} status-${getTileStatus(tile)} ${debugClass ? "debug" : ""} inner-${tile.innerState}`}
-          onclick={() => tileOnClick(tile.position.x, tile.position.y)}
-        >
-          <span>
-            {tile.num}
-          </span>
-        </button>
-      {/each}
-    </div>
+    <Board />
   </main>
   <footer>
-    <Toolbar bind:currentTool />
+    <Toolbar />
   </footer>
 </div>
 
@@ -188,74 +117,6 @@
     align-items: center;
     aspect-ratio: 1;
     margin: auto;
-  }
-  .grid {
-    background-color: var(--color-background);
-    display: grid;
-    gap: 3px;
-    padding: 1rem;
-  }
-  .tile {
-    --tile-color: var(--color-surface);
-    --tile-hover: 0.02;
-    --tile-text-color: var(--color-foreground);
-    border: none;
-    border-radius: 2px;
-    aspect-ratio: 1;
-    background-color: var(--tile-color) !important;
-    color: var(--tile-text-color);
-    cursor: pointer;
-    font: inherit;
-    container-type: inline-size;
-    padding: 0;
-
-    &.debug {
-      border: 1px solid var(--inner-color);
-    }
-
-    &.inner-active {
-      --inner-color: var(--color-accent);
-    }
-    &.inner-inactive {
-      --inner-color: var(--color-foreground);
-    }
-
-    &.active {
-      --tile-color: var(--color-accent);
-    }
-    &.inactive {
-      --tile-color: var(--color-foreground);
-      --tile-text-color: var(--color-surface);
-      --tile-hover: -0.02;
-    }
-
-    &.status-solved {
-      color: oklch(
-        from var(--tile-text-color) calc(l - 8 * var(--tile-hover)) c h
-      );
-    }
-    &.status-error {
-      --tile-text-color: var(--color-error);
-    }
-
-    &:hover {
-      background-color: oklch(
-        from var(--tile-color) calc(l + var(--tile-hover)) c h
-      );
-    }
-  }
-  .tile > span {
-    font-size: 2.5rem;
-
-    @media (max-width: 700px) {
-      font-size: 2rem;
-    }
-    @media (max-width: 500px) {
-      font-size: 1.5rem;
-    }
-    @media (max-width: 300px) {
-      font-size: 1rem;
-    }
   }
 
   dialog:open {

@@ -1,17 +1,5 @@
-export type TileState = "active" | "inactive" | "disabled";
-
-export type Position = {
-  x: number;
-  y: number;
-};
-
-export type Tile = {
-  num?: number;
-  position: Position;
-  state: TileState;
-  innerState: TileState;
-  neighbours: Position[];
-};
+import type { Tile, TileState } from "$lib/types";
+import { getNeighbouringTiles } from "./game.svelte";
 
 function random(max: number) {
   return Math.floor(Math.random() * max);
@@ -37,6 +25,7 @@ export function reset(width: number): Tile[][] {
     for (let x = 0; x < width; x++) {
       let tile: Tile = {
         position: { x, y },
+        oldState: "disabled",
         state: "disabled",
         innerState: "disabled",
         neighbours: [],
@@ -119,16 +108,8 @@ export function isSolvable(tiles: Tile[][]) {
   ) {
     changed = false;
     tiles.flat().forEach((tile) => {
-      let disabled = tile.neighbours.filter(
-        (pos) => tiles[pos.y][pos.x].state === "disabled",
-      );
+      const { active, inactive, disabled } = getNeighbouringTiles(tiles, tile);
       if (disabled.length < 1) return;
-      let active = tile.neighbours.filter(
-        (pos) => tiles[pos.y][pos.x].state === "active",
-      );
-      let inactive = tile.neighbours.filter(
-        (pos) => tiles[pos.y][pos.x].state === "inactive",
-      );
 
       if (disabled.length + active.length === tile.num) {
         disabled.forEach((pos) => {
