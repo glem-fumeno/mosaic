@@ -1,9 +1,9 @@
 import { reset } from "./mosaic";
+import settings from "./settings.svelte";
 import type { Position, Tile, TileState } from "./types";
 
 let debugMode = $state<boolean>(false);
 let board = $state<Tile[][]>([]);
-let width = $state(10);
 let currentTool = $state<TileState>("active");
 let gameState = $state<"running" | "won">("running");
 
@@ -48,7 +48,7 @@ const game = {
     debugMode = !debugMode;
   },
   resetGrid() {
-    board = reset(width);
+    board = reset(settings.boardSize);
     this.saveTiles();
     gameState = "running";
   },
@@ -56,7 +56,12 @@ const game = {
     window.localStorage.setItem("tiles", JSON.stringify(board));
   },
   loadTiles(tiles: string) {
-    board = JSON.parse(tiles);
+    const newBoard = JSON.parse(tiles);
+    if (newBoard.length != settings.boardSize) {
+      this.resetGrid();
+      return;
+    }
+    board = newBoard;
     board.flat().forEach((tile) => (tile.oldState = "disabled"));
   },
   setTool(tool: TileState) {

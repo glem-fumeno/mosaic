@@ -1,5 +1,9 @@
 <script>
+  import { preloadData } from "$app/navigation";
   import Button from "$lib/button.svelte";
+
+  preloadData('/game');
+  preloadData('/settings');
 </script>
 
 <main>

@@ -4,15 +4,16 @@
     onclick = undefined,
     href = undefined,
     size = "1rem",
+    active = false,
   } = $props();
 </script>
 
 {#if href !== undefined}
-  <a {href} style:font-size={size}>
+  <a {href} class={active ? "active" : ""} style:font-size={size}>
     {@render children()}
   </a>
 {:else}
-  <button {onclick} style:font-size={size}>
+  <button {onclick} class={active ? "active" : ""} style:font-size={size}>
     {@render children()}
   </button>
 {/if}
@@ -34,7 +35,8 @@
     gap: 0.5rem;
 
     &:hover,
-    &:active {
+    &:active,
+    &.active {
       background-color: var(--color-sur);
     }
   }

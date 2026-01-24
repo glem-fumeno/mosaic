@@ -2,6 +2,7 @@
   import Button from "$lib/button.svelte";
   import Icon from "$lib/icon.svelte";
   import settings from "$lib/settings.svelte";
+  import type { Color, Theme } from "$lib/types";
 </script>
 
 <header>
@@ -9,43 +10,45 @@
     <Icon name="arrow_back" />
   </Button>
   <div class="h1-wrapper">
-    <h1>Mosaic</h1>
+    <h1>Settings</h1>
   </div>
   <div class="placeholder"></div>
 </header>
 <main>
   <span>Theme:</span>
   <div class="buttons">
-    <Button onclick={() => settings.setTheme("dark")} size=".75rem">
-      <Icon name="square" color="var(--color-dark)" />
-    </Button>
-    <Button onclick={() => settings.setTheme("light")} size=".75rem">
-      <Icon name="square" color="var(--color-light)" />
-    </Button>
+    {#each ["light", "dark"] as Theme[] as theme}
+      <Button
+        active={settings.theme === theme}
+        onclick={() => settings.setTheme(theme)}
+        size=".75rem"
+      >
+        <Icon name="square" color="var(--color-{theme})" />
+      </Button>
+    {/each}
   </div>
   <span>Color:</span>
   <div class="buttons">
-    <Button onclick={() => settings.setColor("red")} size=".75rem">
-      <Icon name="square" color="var(--color-red)" />
-    </Button>
-    <Button onclick={() => settings.setColor("orange")} size=".75rem">
-      <Icon name="square" color="var(--color-orange)" />
-    </Button>
-    <Button onclick={() => settings.setColor("yellow")} size=".75rem">
-      <Icon name="square" color="var(--color-yellow)" />
-    </Button>
-    <Button onclick={() => settings.setColor("green")} size=".75rem">
-      <Icon name="square" color="var(--color-green)" />
-    </Button>
-    <Button onclick={() => settings.setColor("blue")} size=".75rem">
-      <Icon name="square" color="var(--color-blue)" />
-    </Button>
-    <Button onclick={() => settings.setColor("purple")} size=".75rem">
-      <Icon name="square" color="var(--color-purple)" />
-    </Button>
-    <Button onclick={() => settings.setColor("pink")} size=".75rem">
-      <Icon name="square" color="var(--color-pink)" />
-    </Button>
+    {#each ["red", "orange", "yellow", "green", "blue", "purple", "pink"] as Color[] as color}
+      <Button
+        active={settings.color === color}
+        onclick={() => settings.setColor(color)}
+        size=".75rem"
+      >
+        <Icon name="square" color="var(--color-{color})" />
+      </Button>
+    {/each}
+  </div>
+  <span>Grid Size:</span>
+  <div class="buttons">
+    {#each [6, 8, 10, 12] as size}
+      <Button
+        active={settings.boardSize === size}
+        onclick={() => settings.setBoardSize(size)}
+      >
+        {size}x{size}
+      </Button>
+    {/each}
   </div>
 </main>
 

@@ -122,6 +122,7 @@
       var(--tile-old-color) var(--fill-level) var(--fill-level),
       var(--tile-color) var(--fill-level) var(--fill-level)
     );
+    container-type: inline-size;
 
     &.debug {
       border: 1px solid var(--inner-color);
@@ -179,18 +180,20 @@
       );
     }
   }
-  .tile {
-    --font-size: 2.5rem;
+  .tile > span {
     font-size: var(--font-size);
 
-    @media (max-width: 700px) {
-      --font-size: 2rem;
+    @container (width > 16px) {
+      --font-size: 1rem;
     }
-    @media (max-width: 500px) {
+    @container (width > 32px) {
       --font-size: 1.5rem;
     }
-    @media (max-width: 300px) {
-      --font-size: 1rem;
+    @container (width > 48px) {
+      --font-size: 2rem;
+    }
+    @container (width > 64px) {
+      --font-size: 2.5rem;
     }
   }
 </style>
