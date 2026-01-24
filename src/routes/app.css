@@ -1,15 +1,61 @@
 :root {
-  --color-base: #1b1620;
-  --color-background: #261f2d;
-  --color-surface: #32293b;
-  --color-foreground: #c1acd7;
-  --color-accent: #8a47d1;
-  --color-error: #d3494b;
+  --color-red: oklch(0.61 0.21 36);
+  --color-orange: oklch(0.61 0.21 73);
+  --color-yellow: oklch(0.61 0.21 100);
+  --color-green: oklch(0.61 0.21 150);
+  --color-blue: oklch(0.61 0.21 218);
+  --color-purple: oklch(0.61 0.21 308);
+  --color-pink: oklch(0.61 0.21 335);
+
+  --color-dark: oklch(0.21 0.02 var(--color-hue));
+  --color-light: oklch(0.96 0.02 var(--color-hue));
+}
+:root:has([data-color="red"]) {
+  --color-hue: 36;
+}
+:root:has([data-color="orange"]) {
+  --color-hue: 73;
+}
+:root:has([data-color="yellow"]) {
+  --color-hue: 100;
+}
+:root:has([data-color="green"]) {
+  --color-hue: 150;
+}
+:root:has([data-color="blue"]) {
+  --color-hue: 218;
+}
+:root:has([data-color="purple"]) {
+  --color-hue: 308;
+}
+:root:has([data-color="pink"]) {
+  --color-hue: 335;
+}
+:root:has([data-theme="dark"]) {
+  --color-bas: oklch(0.21 0.02 var(--color-hue));
+  --color-bac: oklch(0.26 0.03 var(--color-hue));
+  --color-sur: oklch(0.31 0.04 var(--color-hue));
+  --color-for: oklch(0.81 0.05 var(--color-hue));
+  --color-acc: oklch(0.61 0.21 var(--color-hue));
+  --color-sec: oklch(0.41 0.11 var(--color-hue));
+
+  --hover-multiplier: 0.02;
+}
+
+:root:has([data-theme="light"]) {
+  --color-bas: oklch(0.96 0.02 var(--color-hue));
+  --color-bac: oklch(0.91 0.03 var(--color-hue));
+  --color-sur: oklch(0.86 0.04 var(--color-hue));
+  --color-for: oklch(0.21 0.05 var(--color-hue));
+  --color-acc: oklch(0.61 0.21 var(--color-hue));
+  --color-sec: oklch(0.81 0.11 var(--color-hue));
+
+  --hover-multiplier: -0.02;
 }
 
 body {
-  background-color: var(--color-base);
-  color: var(--color-foreground);
+  background-color: var(--color-bas);
+  color: var(--color-for);
   margin: 0;
   font-family: "Lexend", sans-serif;
 }

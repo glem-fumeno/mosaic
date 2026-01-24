@@ -22,8 +22,8 @@
   a {
     border: none;
     text-decoration: none;
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--color-bac);
+    color: var(--color-for);
     padding: 0.75em;
     border-radius: 100vw;
     font: inherit;
@@ -35,7 +35,7 @@
 
     &:hover,
     &:active {
-      background-color: var(--color-surface);
+      background-color: var(--color-sur);
     }
   }
 </style>

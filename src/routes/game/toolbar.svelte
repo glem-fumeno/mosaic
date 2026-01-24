@@ -10,14 +10,14 @@
     onclick={() => game.setTool("active")}
     class={game.currentTool === "active" ? "active" : ""}
   >
-    <Icon name="square" color="var(--color-accent)" />
+    <Icon name="square" color="var(--color-acc)" />
   </button>
   <button
     ontouchstart={() => game.setTool("inactive")}
     onclick={() => game.setTool("inactive")}
     class={game.currentTool === "inactive" ? "active" : ""}
   >
-    <Icon name="square" color="var(--color-foreground)" />
+    <Icon name="square" color="var(--color-sec)" />
   </button>
   <button
     ontouchstart={() => game.setTool("disabled")}
@@ -30,7 +30,7 @@
 
 <style>
   .buttons {
-    background-color: var(--color-background);
+    background-color: var(--color-bac);
     border-radius: 100vw;
     padding: 0.5rem 0.5rem;
     margin-block: 2rem;
@@ -39,7 +39,7 @@
 
   button {
     border: none;
-    color: var(--color-foreground);
+    color: var(--color-for);
     padding: 0.5rem;
     aspect-ratio: 1;
     height: 100%;
@@ -55,7 +55,7 @@
   }
 
   .highlight {
-    background-color: var(--color-surface);
+    background-color: var(--color-sur);
     width: calc(32px + 1rem);
     height: calc(32px + 1rem);
     border-radius: 100vw;
@@ -72,7 +72,7 @@
       visibility: hidden;
     }
     button.active {
-      background-color: var(--color-surface);
+      background-color: var(--color-sur);
     }
   }
 </style>

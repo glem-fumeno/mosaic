@@ -1,3 +1,12 @@
+export type Theme = "dark" | "light";
+export type Color =
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "purple"
+  | "pink";
 
 export type TileState = "active" | "inactive" | "disabled";
 
@@ -14,4 +23,3 @@ export type Tile = {
   innerState: TileState;
   neighbours: Position[];
 };
-

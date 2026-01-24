@@ -89,7 +89,7 @@
   }
   header {
     display: flex;
-    background-color: var(--color-background);
+    background-color: var(--color-bac);
     padding: 4rem 0.5rem 0.25rem 0.5rem;
     box-sizing: border-box;
     margin-bottom: 2rem;
@@ -146,7 +146,7 @@
   }
 
   dialog:open::backdrop {
-    background-color: oklch(from var(--color-base) l c h / 0.3);
+    background-color: oklch(from var(--color-bas) l c h / 0.3);
   }
 
   @starting-style {
@@ -157,8 +157,8 @@
 
   dialog {
     border: none;
-    background-color: var(--color-base);
-    color: var(--color-foreground);
+    background-color: var(--color-bas);
+    color: var(--color-for);
     border-radius: 1rem;
 
     .dialog-wrapper {

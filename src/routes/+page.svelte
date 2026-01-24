@@ -7,6 +7,7 @@
   <div class="buttons">
     <Button size="1.5rem" href="/game">Continue</Button>
     <Button size="1.5rem" href="/game?reset">New Game</Button>
+    <Button size="1.5rem" href="/settings">Settings</Button>
   </div>
 </main>
 

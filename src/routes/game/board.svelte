@@ -66,7 +66,7 @@
 
 <style>
   .grid {
-    background-color: var(--color-background);
+    background-color: var(--color-bac);
     display: grid;
     gap: 3px;
     padding: 1rem;
@@ -104,10 +104,10 @@
   }
 
   .tile {
-    --tile-color: var(--color-surface);
-    --tile-old-color: var(--color-surface);
-    --tile-hover: 0.02;
-    --tile-text-color: var(--color-foreground);
+    --tile-color: var(--color-sur);
+    --tile-old-color: var(--color-sur);
+    --tile-hover: var(--hover-multiplier);
+    --tile-text-color: var(--color-for);
     border: none;
     border-radius: 2px;
     aspect-ratio: 1;
@@ -115,6 +115,7 @@
     cursor: pointer;
     font: inherit;
     container-type: inline-size;
+    position: relative;
     padding: 0;
     animation: 100ms size-off forwards;
     background-image: radial-gradient(
@@ -127,20 +128,21 @@
     }
 
     &.inner-active {
-      --inner-color: var(--color-accent);
+      --inner-color: var(--color-acc);
     }
     &.inner-inactive {
-      --inner-color: var(--color-foreground);
+      --inner-color: var(--color-sec);
     }
     &.old-active {
-      --tile-old-color: var(--color-accent);
+      --tile-old-color: var(--color-acc);
     }
     &.old-inactive {
-      --tile-old-color: var(--color-foreground);
+      --tile-old-color: var(--color-sec);
     }
 
     &.active {
-      --tile-color: var(--color-accent);
+      --tile-color: var(--color-acc);
+      --tile-text-color: var(--color-bas);
       background-image: radial-gradient(
         var(--tile-color) var(--fill-level) var(--fill-level),
         var(--tile-old-color) var(--fill-level) var(--fill-level)
@@ -148,9 +150,8 @@
       animation: 100ms size-active forwards;
     }
     &.inactive {
-      --tile-color: var(--color-foreground);
-      --tile-text-color: var(--color-surface);
-      --tile-hover: -0.02;
+      --tile-hover: calc(0 - var(--hover-multiplier));
+      --tile-color: var(--color-sec);
       background-image: radial-gradient(
         var(--tile-color) var(--fill-level) var(--fill-level),
         var(--tile-old-color) var(--fill-level) var(--fill-level)
@@ -160,11 +161,16 @@
 
     &.status-solved {
       color: oklch(
-        from var(--tile-text-color) calc(l - 8 * var(--tile-hover)) c h
+        from var(--tile-text-color) calc(l + 6 * var(--tile-hover)) c h
       );
     }
-    &.status-error {
-      --tile-text-color: var(--color-error);
+    &.status-error::after {
+      content: "!";
+      font-size: calc(var(--font-size) / 2);
+      font-weight: bold;
+      position: absolute;
+      right: 4px;
+      top: 2px;
     }
 
     &:hover {
@@ -173,17 +179,18 @@
       );
     }
   }
-  .tile > span {
-    font-size: 2.5rem;
+  .tile {
+    --font-size: 2.5rem;
+    font-size: var(--font-size);
 
     @media (max-width: 700px) {
-      font-size: 2rem;
+      --font-size: 2rem;
     }
     @media (max-width: 500px) {
-      font-size: 1.5rem;
+      --font-size: 1.5rem;
     }
     @media (max-width: 300px) {
-      font-size: 1rem;
+      --font-size: 1rem;
     }
   }
 </style>
