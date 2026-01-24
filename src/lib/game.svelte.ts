@@ -53,16 +53,19 @@ const game = {
     gameState = "running";
   },
   saveTiles() {
-    window.localStorage.setItem("tiles", JSON.stringify(board));
+    window.localStorage.setItem(
+      `tiles ${settings.boardSize}`,
+      JSON.stringify(board),
+    );
   },
-  loadTiles(tiles: string) {
+  loadTiles() {
+    const tiles = window.localStorage.getItem(`tiles ${settings.boardSize}`);
+    if (tiles === null) return this.resetGrid();
     const newBoard = JSON.parse(tiles);
-    if (newBoard.length != settings.boardSize) {
-      this.resetGrid();
-      return;
-    }
+    if (newBoard.length != settings.boardSize) return this.resetGrid();
     board = newBoard;
     board.flat().forEach((tile) => (tile.oldState = "disabled"));
+    gameState = "running";
   },
   setTool(tool: TileState) {
     currentTool = tool;
@@ -74,11 +77,17 @@ const game = {
     tile.state = currentTool;
     game.saveTiles();
   },
+  setGameState(newGameState: "running" | "won") {
+    gameState = newGameState;
+  },
   updateGameState() {
-    if (gameState === "won") return;
+    if (gameState === "won") {
+      return window.localStorage.removeItem(`tiles ${settings.boardSize}`);
+    }
+
     if (game.board.flat().every((tile) => tile.innerState === tile.state)) {
       gameState = "won";
-      return;
+      return window.localStorage.removeItem(`tiles ${settings.boardSize}`);
     }
   },
 };

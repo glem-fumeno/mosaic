@@ -12,7 +12,7 @@
   let dialog = $state<HTMLDialogElement>()!;
 
   $effect(() => {
-    if (game.gameState == "won") {
+    if (game.gameState === "won") {
       openModal("You win!");
     }
   });
@@ -25,13 +25,12 @@
     dialog.close();
   }
   onMount(() => {
-    const tileLoad = window.localStorage.getItem("tiles");
-    if (tileLoad === null || page.url.searchParams.get("reset") === "") {
+    if (page.url.searchParams.get("reset") === "") {
       game.resetGrid();
       replaceState("/game", {});
       return;
     }
-    game.loadTiles(tileLoad);
+    game.loadTiles();
   });
 </script>
 
@@ -66,10 +65,10 @@
     </div>
     <Button
       onclick={() => {
-        openModal("Options");
+        game.resetGrid()
       }}
     >
-      <Icon name="settings" />
+      <Icon name="autorenew" />
     </Button>
   </header>
   <main>
@@ -89,6 +88,7 @@
   }
   header {
     display: flex;
+    align-items: center;
     background-color: var(--color-bac);
     padding: 4rem 0.5rem 0.25rem 0.5rem;
     box-sizing: border-box;

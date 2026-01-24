@@ -1,15 +1,27 @@
-<script>
+<script lang="ts">
   import { preloadData } from "$app/navigation";
   import Button from "$lib/button.svelte";
+  import game from "$lib/game.svelte";
+  import settings from "$lib/settings.svelte";
+  import { onMount } from "svelte";
 
-  preloadData('/game');
-  preloadData('/settings');
+  preloadData("/game");
+  preloadData("/settings");
+  let gameNotStarted = $state<boolean>(false);
+
+  onMount(() => {
+    game.setGameState("running");
+    gameNotStarted =
+      window.localStorage.getItem(`tiles ${settings.boardSize}`) === null;
+  });
 </script>
 
 <main>
   <h1>Mosaic</h1>
   <div class="buttons">
-    <Button size="1.5rem" href="/game">Continue</Button>
+    <Button size="1.5rem" href="/game" disabled={gameNotStarted}>
+      Continue
+    </Button>
     <Button size="1.5rem" href="/game?reset">New Game</Button>
     <Button size="1.5rem" href="/settings">Settings</Button>
   </div>

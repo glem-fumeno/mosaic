@@ -3,6 +3,10 @@
   let { children } = $props();
   import { onNavigate } from "$app/navigation";
   import settings from "$lib/settings.svelte";
+  import { onMount } from "svelte";
+  onMount(() => {
+    settings.loadSettings();
+  });
 
   onNavigate((navigation) => {
     if (!document.startViewTransition) return;

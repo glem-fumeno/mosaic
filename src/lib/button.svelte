@@ -5,15 +5,25 @@
     href = undefined,
     size = "1rem",
     active = false,
+    disabled = false,
   } = $props();
 </script>
 
 {#if href !== undefined}
-  <a {href} class={active ? "active" : ""} style:font-size={size}>
+  <a
+    href={disabled ? undefined : href}
+    class="{active ? 'active' : ''} {disabled ? 'disabled' : ''}"
+    style:font-size={size}
+  >
     {@render children()}
   </a>
 {:else}
-  <button {onclick} class={active ? "active" : ""} style:font-size={size}>
+  <button
+    {onclick}
+    {disabled}
+    class="{active ? 'active' : ''} {disabled ? 'disabled' : ''}"
+    style:font-size={size}
+  >
     {@render children()}
   </button>
 {/if}
@@ -38,6 +48,12 @@
     &:active,
     &.active {
       background-color: var(--color-sur);
+    }
+    &.disabled {
+      border: 2px solid var(--color-bac);
+      color: var(--color-sur);
+      cursor: not-allowed;
+      background-color: var(--color-bas);
     }
   }
 </style>
