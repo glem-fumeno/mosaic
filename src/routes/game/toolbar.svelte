@@ -39,6 +39,7 @@
 
   button {
     border: none;
+    display: inline-grid;
     color: var(--color-for);
     padding: 0.5rem;
     aspect-ratio: 1;

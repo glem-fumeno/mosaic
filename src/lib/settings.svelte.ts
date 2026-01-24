@@ -1,10 +1,14 @@
-import type { Color, Theme } from "./types";
+import type { Color, Theme, Page } from "./types";
 
 let theme = $state<Theme>("dark");
 let color = $state<Color>("purple");
 let boardSize = $state(10);
+let preloadedPages = $state<Page[]>([]);
 
 const settings = {
+  get preloadedPages() {
+    return preloadedPages;
+  },
   get theme() {
     return theme;
   },
@@ -13,6 +17,9 @@ const settings = {
   },
   get boardSize() {
     return boardSize;
+  },
+  addPreloadedPage(page: Page) {
+    preloadedPages.push(page);
   },
   setColor(newColor: Color) {
     color = newColor;

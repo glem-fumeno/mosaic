@@ -1,15 +1,17 @@
 <script lang="ts">
-  import { preloadData } from "$app/navigation";
+  import {  preloadCode, preloadData } from "$app/navigation";
   import Button from "$lib/button.svelte";
   import game from "$lib/game.svelte";
   import settings from "$lib/settings.svelte";
   import { onMount } from "svelte";
 
   preloadData("/game");
+  preloadCode("/game");
   preloadData("/settings");
+  preloadCode("/settings");
   let gameNotStarted = $state<boolean>(false);
 
-  onMount(() => {
+  onMount(async () => {
     game.setGameState("running");
     gameNotStarted =
       window.localStorage.getItem(`tiles ${settings.boardSize}`) === null;

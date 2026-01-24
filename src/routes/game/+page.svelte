@@ -24,7 +24,7 @@
   function closeModal() {
     dialog.close();
   }
-  onMount(() => {
+  onMount(async () => {
     if (page.url.searchParams.get("reset") === "") {
       game.resetGrid();
       replaceState("/game", {});

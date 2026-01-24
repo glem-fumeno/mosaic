@@ -13,9 +13,21 @@
 </span>
 
 <style>
-.material-symbols-rounded {
-  display: grid;
-  place-items: center;
-  width: fit-content;
-}
+  .material-symbols-rounded {
+    display: grid;
+    place-items: center;
+    width: fit-content;
+
+    font-family: "Material Symbols Rounded";
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    font-variation-settings: "FILL" 1;
+  }
 </style>

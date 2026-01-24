@@ -1,3 +1,16 @@
+@font-face {
+  font-family: "Lexend";
+  src: url("/Lexend.ttf") format("truetype");
+  font-weight: 125 950;
+
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  src: url("/MaterialSymbols.woff2") format('woff2');
+}
+
 :root {
   --color-red: oklch(0.71 0.21 36);
   --color-orange: oklch(0.71 0.21 73);
