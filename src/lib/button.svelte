@@ -33,6 +33,7 @@
   a {
     border: none;
     text-decoration: none;
+    border: 2px solid var(--color-bac);
     background-color: var(--color-bac);
     color: var(--color-for);
     padding: 0.75em;
@@ -44,9 +45,12 @@
     justify-content: center;
     gap: 0.5rem;
 
-    &:hover,
-    &:active,
     &.active {
+      background-color: var(--color-sur);
+      border: 2px solid var(--color-for);
+    }
+    &:hover,
+    &:active {
       background-color: var(--color-sur);
     }
     &.disabled {

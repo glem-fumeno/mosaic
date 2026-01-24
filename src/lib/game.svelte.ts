@@ -2,7 +2,6 @@ import { reset } from "./mosaic";
 import settings from "./settings.svelte";
 import type { Position, Tile, TileState } from "./types";
 
-let debugMode = $state<boolean>(false);
 let board = $state<Tile[][]>([]);
 let currentTool = $state<TileState>("active");
 let gameState = $state<"running" | "won">("running");
@@ -32,9 +31,6 @@ export function getNeighbouringTiles(
 }
 
 const game = {
-  get debugMode() {
-    return debugMode;
-  },
   get board() {
     return board;
   },
@@ -43,9 +39,6 @@ const game = {
   },
   get gameState() {
     return gameState;
-  },
-  toggleDebug() {
-    debugMode = !debugMode;
   },
   resetGrid() {
     board = reset(settings.boardSize);

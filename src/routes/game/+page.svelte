@@ -37,12 +37,10 @@
 <div class="page">
   <dialog bind:this={dialog} closedby="any">
     <div class="dialog-wrapper">
-      <h2 ondblclick={game.toggleDebug}>
-        {dialogText}
-      </h2>
-      <Button size="1.25rem" onclick={closeModal}>
-        <Icon name="close" size={24} />
-        <span>Close</span>
+      <h2>{dialogText}</h2>
+      <Button size="1.25rem" href="/">
+        <Icon name="arrow_back" size={24} />
+        <span>Menu</span>
       </Button>
       <Button
         size="1.25rem"
@@ -65,7 +63,7 @@
     </div>
     <Button
       onclick={() => {
-        game.resetGrid()
+        game.resetGrid();
       }}
     >
       <Icon name="autorenew" />

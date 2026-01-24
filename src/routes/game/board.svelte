@@ -47,8 +47,6 @@
         tile ${tile.state}
         old-${tile.oldState}
         status-${getTileStatus(tile)}
-        ${game.debugMode ? "debug" : ""}
-        inner-${tile.innerState}
       `}
       data-x={tile.position.x}
       data-y={tile.position.y}
@@ -124,16 +122,6 @@
     );
     container-type: inline-size;
 
-    &.debug {
-      border: 1px solid var(--inner-color);
-    }
-
-    &.inner-active {
-      --inner-color: var(--color-acc);
-    }
-    &.inner-inactive {
-      --inner-color: var(--color-sec);
-    }
     &.old-active {
       --tile-old-color: var(--color-acc);
     }
