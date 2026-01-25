@@ -28,6 +28,8 @@ const settings = {
       case "/game":
         return "/settings";
       case "/settings":
+        return "/info";
+      case "/info":
         return "/";
     }
   },

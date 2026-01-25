@@ -16,7 +16,7 @@
 
   async function preload() {
     loading = true;
-    if (settings.preloadedPages.length >= 3) {
+    if (settings.preloadedPages.length >= 4) {
       loading = false;
       return;
     }

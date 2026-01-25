@@ -26,6 +26,7 @@
     </Button>
     <Button size="1.5rem" href="/game?reset">New Game</Button>
     <Button size="1.5rem" href="/settings">Settings</Button>
+    <Button size="1.5rem" href="/info">Info</Button>
   </div>
 </main>
 

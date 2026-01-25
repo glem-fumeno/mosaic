@@ -1,7 +1,7 @@
-# Tauri + SvelteKit + TypeScript
+# Mosaic
+You must determine which squares in a grid are light and which are dark.
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+Each numbered cell indicates how many light squares are in its 3x3 neighbourhood.
 
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+Original idea by: Trevor Truran
+[Wikipedia](https://en.wikipedia.org/wiki/Trevor_Truran)
