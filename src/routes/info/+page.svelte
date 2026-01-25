@@ -16,11 +16,13 @@
   <h2>How to play?</h2>
   <p>
     <span>
-      You must determine which squares in a grid are light and which are dark.
+      You must determine which squares in a grid are
+      <strong class="active">active</strong> and which are
+      <strong class="inactive">inactive</strong>.
     </span>
     <span>
-      Each numbered cell indicates how many light squares are in its 3x3
-      neighbourhood.
+      Each numbered cell indicates how many
+      <strong class="active">active</strong> squares are in its 3x3 neighbourhood.
     </span>
   </p>
   <h2>Credits:</h2>
@@ -67,6 +69,18 @@
     text-align: justify;
     display: grid;
     gap: 1rem;
+    strong.active {
+      color: var(--color-bas);
+      background-color: var(--color-acc);
+      padding: 0px 6px;
+      border-radius: 100vw;
+    }
+    strong.inactive {
+      color: var(--color-for);
+      background-color: var(--color-sec);
+      padding: 0px 6px;
+      border-radius: 100vw;
+    }
     p {
       margin-top: 0;
       display: grid;
