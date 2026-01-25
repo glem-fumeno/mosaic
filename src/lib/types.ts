@@ -8,6 +8,8 @@ export type Color =
   | "purple"
   | "pink";
 
+export type Page = "/" | "/game" | "/settings";
+
 export type TileState = "active" | "inactive" | "disabled";
 
 export type Position = {

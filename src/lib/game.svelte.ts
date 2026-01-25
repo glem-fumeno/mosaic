@@ -41,8 +41,8 @@ const game = {
     return gameState;
   },
   resetGrid() {
+    window.localStorage.removeItem(`tiles ${settings.boardSize}`);
     board = reset(settings.boardSize);
-    this.saveTiles();
     gameState = "running";
   },
   saveTiles() {
@@ -52,6 +52,7 @@ const game = {
     );
   },
   loadTiles() {
+    settings.loadSettings();
     const tiles = window.localStorage.getItem(`tiles ${settings.boardSize}`);
     if (tiles === null) return this.resetGrid();
     const newBoard = JSON.parse(tiles);

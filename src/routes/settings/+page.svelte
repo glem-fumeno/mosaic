@@ -18,36 +18,36 @@
   <span>Theme:</span>
   <div class="buttons">
     {#each ["light", "dark"] as Theme[] as theme}
-      <Button
-        active={settings.theme === theme}
+      <button
+        class:active={settings.theme === theme}
         onclick={() => settings.setTheme(theme)}
-        size=".75rem"
+        style:background-color="var(--color-{theme})"
+        aria-label={theme}
       >
-        <Icon name="square" color="var(--color-{theme})" />
-      </Button>
+      </button>
     {/each}
   </div>
   <span>Color:</span>
   <div class="buttons">
     {#each ["red", "orange", "yellow", "green", "blue", "purple", "pink"] as Color[] as color}
-      <Button
-        active={settings.color === color}
+      <button
+        class:active={settings.color === color}
         onclick={() => settings.setColor(color)}
-        size=".75rem"
+        style:background-color="var(--color-{color})"
+        aria-label={color}
       >
-        <Icon name="square" color="var(--color-{color})" />
-      </Button>
+      </button>
     {/each}
   </div>
   <span>Grid Size:</span>
   <div class="buttons">
     {#each [6, 8, 10, 12] as size}
-      <Button
-        active={settings.boardSize === size}
+      <button
+        class:active={settings.boardSize === size}
         onclick={() => settings.setBoardSize(size)}
       >
         {size}x{size}
-      </Button>
+      </button>
     {/each}
   </div>
 </main>
@@ -81,8 +81,25 @@
     padding: 0.5rem;
     .buttons {
       display: flex;
-      gap: 0.2rem;
+      gap: 4px;
       margin-bottom: 0.5rem;
+      max-width: 100vw;
+      button {
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+        border: none;
+        background-color: var(--color-bac);
+        font: inherit;
+        display: grid;
+        place-items: center;
+        color: inherit;
+        border-radius: 100vw;
+        padding: .5rem;
+        &.active {
+          border: 2px solid var(--color-bac);
+          outline: 2px solid var(--color-for);
+        }
+      }
     }
   }
 </style>

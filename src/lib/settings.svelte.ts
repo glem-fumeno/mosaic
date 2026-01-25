@@ -21,6 +21,16 @@ const settings = {
   addPreloadedPage(page: Page) {
     preloadedPages.push(page);
   },
+  nextPage(page: Page): Page {
+    switch (page) {
+      case "/":
+        return "/game";
+      case "/game":
+        return "/settings";
+      case "/settings":
+        return "/";
+    }
+  },
   setColor(newColor: Color) {
     color = newColor;
     this.saveSettings();

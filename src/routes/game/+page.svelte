@@ -7,6 +7,7 @@
   import Button from "$lib/button.svelte";
   import Board from "./board.svelte";
   import game from "$lib/game.svelte";
+  import { sleep } from "$lib/utils";
 
   let dialogText = $state("");
   let dialog = $state<HTMLDialogElement>()!;
@@ -18,8 +19,10 @@
   });
 
   function openModal(text: string) {
-    dialogText = text;
-    dialog.showModal();
+    sleep(10).then(() => {
+      dialogText = text;
+      dialog.showModal();
+    });
   }
   function closeModal() {
     dialog.close();
