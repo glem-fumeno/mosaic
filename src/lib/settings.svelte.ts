@@ -2,7 +2,7 @@ import type { Color, Theme, Page } from "./types";
 
 let theme = $state<Theme>("dark");
 let color = $state<Color>("purple");
-let boardSize = $state(10);
+let boardSize = $state(6);
 let preloadedPages = $state<Page[]>([]);
 
 const settings = {
@@ -51,7 +51,7 @@ const settings = {
   loadSettings() {
     theme = (window.localStorage.getItem("theme") ?? "dark") as Theme;
     color = (window.localStorage.getItem("color") ?? "purple") as Color;
-    boardSize = +(window.localStorage.getItem("boardSize") ?? "10");
+    boardSize = +(window.localStorage.getItem("boardSize") ?? "6");
   },
 };
 
