@@ -153,13 +153,17 @@
         from var(--tile-text-color) calc(l + 6 * var(--tile-hover)) c h
       );
     }
-    &.status-error::after {
+    &::after {
       content: "!";
+      color: transparent;
       font-size: calc(var(--font-size) / 2);
       font-weight: bold;
       position: absolute;
       right: 4px;
       top: 2px;
+    }
+    &.status-error::after {
+      color: var(--tile-text-color);
     }
 
     &:hover {

@@ -69,12 +69,12 @@ const game = {
     if (tile.state === currentTool) return;
     tile.oldState = tile.state;
     tile.state = currentTool;
-    game.saveTiles();
   },
   setGameState(newGameState: "running" | "won") {
     gameState = newGameState;
   },
   updateGameState() {
+    game.saveTiles()
     if (gameState === "won") {
       return window.localStorage.removeItem(`tiles ${settings.boardSize}`);
     }

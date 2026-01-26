@@ -39,6 +39,21 @@
         Trevor Truran
       </a>
     </span>
+    <span>
+      Font:
+      <a target="_blank" href="https://fonts.google.com/specimen/Lexend">
+        Lexend
+      </a>
+    </span>
+    <span>
+      Icons:
+      <a target="_blank" href="https://fonts.google.com/icons">
+         Material Icons
+      </a>
+    </span>
+    <span class="no-ai">
+      No AI was used when making this app
+    </span>
   </p>
 </main>
 
@@ -93,6 +108,10 @@
     a {
       display: inline;
       color: var(--color-for);
+    }
+    .no-ai {
+      margin-top: 1rem;
+      text-align: center;
     }
   }
 </style>
