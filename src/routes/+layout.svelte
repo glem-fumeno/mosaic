@@ -27,7 +27,7 @@
     }
     if (!settings.preloadedPages.includes(pageId)) {
       settings.addPreloadedPage(pageId);
-      await goto(settings.nextPage(pageId));
+      await goto(settings.nextPage(pageId), { replaceState: true });
       return;
     }
   }

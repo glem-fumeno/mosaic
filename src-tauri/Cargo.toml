@@ -1,6 +1,6 @@
 [package]
 name = "Mosaic"
-version = "0.1.0"
+version = "1.0.3"
 description = "A minimalistic puzzle game"
 authors = ["glem-fumeno"]
 edition = "2021"

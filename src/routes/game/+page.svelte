@@ -58,7 +58,7 @@
     </div>
   </dialog>
   <header>
-    <Button href="/">
+    <Button onclick={() => history.back()}>
       <Icon name="arrow_back" />
     </Button>
     <div class="h1-wrapper">

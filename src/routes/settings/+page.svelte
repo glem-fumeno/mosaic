@@ -6,7 +6,7 @@
 </script>
 
 <header>
-  <Button href="/">
+  <Button onclick={() => history.back()}>
     <Icon name="arrow_back" />
   </Button>
   <div class="h1-wrapper">
@@ -94,7 +94,7 @@
         place-items: center;
         color: inherit;
         border-radius: 100vw;
-        padding: .5rem;
+        padding: 0.5rem;
         &.active {
           border: 2px solid var(--color-bac);
           outline: 2px solid var(--color-for);
