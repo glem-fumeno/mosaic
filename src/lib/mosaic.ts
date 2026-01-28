@@ -29,6 +29,7 @@ export function reset(width: number): Tile[][] {
         state: "disabled",
         innerState: "disabled",
         neighbours: [],
+        locked: false
       };
       for (let i = Math.max(y - 1, 0); i < Math.min(y + 2, width); i++) {
         for (let j = Math.max(x - 1, 0); j < Math.min(x + 2, width); j++) {

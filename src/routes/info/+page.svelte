@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import Button from "$lib/button.svelte";
   import Icon from "$lib/icon.svelte";
+  import settings from "$lib/settings.svelte";
 </script>
 
 <header>
@@ -24,6 +26,14 @@
       Each numbered cell indicates how many
       <strong class="active">active</strong> squares are in its 3x3 neighbourhood.
     </span>
+    <Button
+      onclick={() => {
+        settings.setTutorialFinished(false);
+        goto("/game");
+      }}
+    >
+      Play the tutorial
+    </Button>
   </p>
   <h2>Credits:</h2>
   <p>
@@ -48,12 +58,10 @@
     <span>
       Icons:
       <a target="_blank" href="https://fonts.google.com/icons">
-         Material Icons
+        Material Icons
       </a>
     </span>
-    <span class="no-ai">
-      No AI was used when making this app
-    </span>
+    <span class="no-ai"> No AI was used when making this app </span>
   </p>
 </main>
 

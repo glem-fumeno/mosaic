@@ -24,4 +24,5 @@ export type Tile = {
   state: TileState;
   innerState: TileState;
   neighbours: Position[];
+  locked: boolean;
 };

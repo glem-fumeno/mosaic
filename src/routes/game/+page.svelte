@@ -2,18 +2,22 @@
   import { onMount } from "svelte";
   import Icon from "$lib/icon.svelte";
   import { page } from "$app/state";
-  import { replaceState } from "$app/navigation";
+  import { goto, replaceState } from "$app/navigation";
   import Toolbar from "./toolbar.svelte";
   import Button from "$lib/button.svelte";
   import Board from "./board.svelte";
   import game from "$lib/game.svelte";
   import { sleep } from "$lib/utils";
+  import settings from "$lib/settings.svelte";
 
   let dialogText = $state("");
   let dialog = $state<HTMLDialogElement>()!;
 
+  let tutorialStage = $state(0);
+  let inTutorial = $state(false);
+
   $effect(() => {
-    if (game.gameState === "won") {
+    if (game.gameState === "won" && !inTutorial) {
       openModal("You win!");
     }
   });
@@ -27,7 +31,25 @@
   function closeModal() {
     dialog.close();
   }
+  function finishTutorial() {
+    settings.setTutorialFinished(true);
+    goto("/");
+  }
+  function nextTutorialStage() {
+    tutorialStage++;
+    game.loadTutorialStage(tutorialStage);
+  }
   onMount(async () => {
+    settings.loadSettings();
+    if (
+      page.url.searchParams.get("tutorial") === "" ||
+      !settings.tutorialFinished
+    ) {
+      game.loadTutorialStage(tutorialStage);
+      replaceState("/game", {});
+      inTutorial = true;
+      return;
+    }
     if (page.url.searchParams.get("reset") === "") {
       game.resetGrid();
       replaceState("/game", {});
@@ -73,6 +95,46 @@
     </Button>
   </header>
   <main>
+    {#if inTutorial}
+      <div class="tutorial">
+        <p>
+          {#if tutorialStage === 0}
+            The goal of the game is to fill all the squares with appropreate
+            colors.
+          {:else if tutorialStage === 1}
+            The 4 in the corner indicates that all of its neighbours including
+            itself are&nbsp<strong class="active">active</strong>. Fill them in!
+          {:else if tutorialStage === 2}
+            Now the 2 has all&nbsp<strong class="active">active</strong> tiles
+            satisfied so the rest of the neighbouring tiles are&nbsp<strong
+              class="inactive"
+            >
+              inactive
+            </strong>.
+          {:else if tutorialStage === 3}
+            Fill in the rest of the squares and finish the puzzle.
+          {/if}
+        </p>
+        <div class="buttons">
+          <Button onclick={finishTutorial}>Skip the Tutorial</Button>
+          {#if tutorialStage >= 3}
+            <Button
+              disabled={!game.isTutorialStageSolved(tutorialStage)}
+              onclick={finishTutorial}
+            >
+              Finish
+            </Button>
+          {:else}
+            <Button
+              disabled={!game.isTutorialStageSolved(tutorialStage)}
+              onclick={nextTutorialStage}
+            >
+              Continue
+            </Button>
+          {/if}
+        </div>
+      </div>
+    {/if}
     <Board />
   </main>
   <footer>
@@ -81,6 +143,31 @@
 </div>
 
 <style>
+  .tutorial {
+    display: grid;
+    padding: 0.5rem;
+    p {
+      text-align: justify;
+      font-size: 1.25rem;
+      height: 3lh;
+      strong.active {
+        color: var(--color-bas);
+        background-color: var(--color-acc);
+        padding: 0px 6px;
+        border-radius: 100vw;
+      }
+      strong.inactive {
+        color: var(--color-for);
+        background-color: var(--color-sec);
+        padding: 0px 6px;
+        border-radius: 100vw;
+      }
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
   .page {
     display: flex;
     flex-direction: column;
