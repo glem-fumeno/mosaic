@@ -71,7 +71,7 @@
     background-color: var(--color-bac);
     padding: 4rem 0.5rem 0.25rem 0.5rem;
     box-sizing: border-box;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     align-items: center;
 
     .h1-wrapper {

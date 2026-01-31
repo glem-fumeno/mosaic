@@ -42,7 +42,7 @@ const en = {
   game: {
     tutorial: {
       stage1: `
-        The goal of the game is to fill all the squares with appropreate colors.
+        The goal of the game is to fill all of the squares with appropreate colors.
       `,
       stage2: `
         The 4 in the corner indicates that all of its neighbours including
