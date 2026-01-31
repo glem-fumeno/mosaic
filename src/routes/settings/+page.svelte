@@ -2,7 +2,8 @@
   import Button from "$lib/button.svelte";
   import Icon from "$lib/icon.svelte";
   import settings from "$lib/settings.svelte";
-  import type { Color, Theme } from "$lib/types";
+  import t from "$lib/translations/language.svelte";
+  import type { Color, Language, Theme } from "$lib/types";
 </script>
 
 <header>
@@ -10,12 +11,12 @@
     <Icon name="arrow_back" />
   </Button>
   <div class="h1-wrapper">
-    <h1>Settings</h1>
+    <h1>{t("settings.title")}</h1>
   </div>
   <div class="placeholder"></div>
 </header>
 <main>
-  <span>Theme:</span>
+  <span>{t("settings.theme")}</span>
   <div class="buttons">
     {#each ["light", "dark"] as Theme[] as theme}
       <button
@@ -27,7 +28,19 @@
       </button>
     {/each}
   </div>
-  <span>Color:</span>
+  <span>{t("settings.language")}</span>
+  <div class="buttons">
+    {#each ["English", "Polski"] as Language[] as language}
+      <button
+        class:active={settings.language === language}
+        onclick={() => settings.setLanguage(language)}
+        aria-label={language}
+      >
+        {language}
+      </button>
+    {/each}
+  </div>
+  <span>{t("settings.color")}</span>
   <div class="buttons">
     {#each ["red", "orange", "yellow", "green", "blue", "purple", "pink"] as Color[] as color}
       <button
@@ -39,7 +52,7 @@
       </button>
     {/each}
   </div>
-  <span>Grid Size:</span>
+  <span>{t("settings.gridSize")}</span>
   <div class="buttons">
     {#each [6, 8, 10, 12] as size}
       <button
@@ -89,6 +102,7 @@
         min-height: 2.5rem;
         border: none;
         background-color: var(--color-bac);
+        border: 2px solid var(--color-bac);
         font: inherit;
         display: grid;
         place-items: center;
@@ -96,7 +110,6 @@
         border-radius: 100vw;
         padding: 0.5rem;
         &.active {
-          border: 2px solid var(--color-bac);
           outline: 2px solid var(--color-for);
         }
       }

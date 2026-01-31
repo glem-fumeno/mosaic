@@ -1,7 +1,9 @@
-import type { Color, Theme, Page } from "./types";
+import { setLanguage } from "./translations/language.svelte";
+import type { Color, Theme, Page, Language } from "./types";
 
 let theme = $state<Theme>("dark");
 let color = $state<Color>("purple");
+let language = $state<Language>("English");
 let boardSize = $state(6);
 let preloadedPages = $state<Page[]>([]);
 let tutorialFinished = $state<boolean>(false);
@@ -15,6 +17,9 @@ const settings = {
   },
   get color() {
     return color;
+  },
+  get language() {
+    return language;
   },
   get boardSize() {
     return boardSize;
@@ -49,25 +54,29 @@ const settings = {
     theme = newTheme;
     this.saveSettings();
   },
+  setLanguage(newLanguage: Language) {
+    language = newLanguage;
+    setLanguage(newLanguage);
+    this.saveSettings();
+  },
   setTutorialFinished(newTutorialFinished: boolean) {
     tutorialFinished = newTutorialFinished;
     this.saveSettings();
   },
   saveSettings() {
-    window.localStorage.setItem("theme", theme);
-    window.localStorage.setItem("color", color);
-    window.localStorage.setItem("boardSize", boardSize.toString());
-    window.localStorage.setItem(
-      "tutorialFinished",
-      tutorialFinished.toString(),
-    );
+    localStorage.setItem("theme", theme);
+    localStorage.setItem("color", color);
+    localStorage.setItem("boardSize", boardSize.toString());
+    localStorage.setItem("language", language);
+    localStorage.setItem("tutorialFinished", tutorialFinished.toString());
   },
   loadSettings() {
-    theme = (window.localStorage.getItem("theme") ?? "dark") as Theme;
-    color = (window.localStorage.getItem("color") ?? "purple") as Color;
-    boardSize = +(window.localStorage.getItem("boardSize") ?? "6");
-    tutorialFinished =
-      window.localStorage.getItem("tutorialFinished") === "true";
+    theme = (localStorage.getItem("theme") ?? "dark") as Theme;
+    color = (localStorage.getItem("color") ?? "purple") as Color;
+    boardSize = +(localStorage.getItem("boardSize") ?? "6");
+    language = (localStorage.getItem("language") ?? "English") as Language;
+    tutorialFinished = localStorage.getItem("tutorialFinished") === "true";
+    setLanguage(language);
   },
 };
 

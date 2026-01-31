@@ -6,9 +6,9 @@
   font-style: normal;
 }
 @font-face {
-  font-family: 'Material Symbols Rounded';
+  font-family: "Material Symbols Rounded";
   font-style: normal;
-  src: url("/MaterialSymbols.woff2") format('woff2');
+  src: url("/MaterialSymbols.woff2") format("woff2");
 }
 
 :root {
@@ -75,4 +75,16 @@ body {
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+strong.active {
+  color: var(--color-bas);
+  background-color: var(--color-acc);
+  padding: 0px 6px;
+  border-radius: 100vw;
+}
+strong.inactive {
+  color: var(--color-for);
+  background-color: var(--color-sec);
+  padding: 0px 6px;
+  border-radius: 100vw;
 }

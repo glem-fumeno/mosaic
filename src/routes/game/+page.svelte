@@ -9,6 +9,7 @@
   import game from "$lib/game.svelte";
   import { sleep } from "$lib/utils";
   import settings from "$lib/settings.svelte";
+  import t from "$lib/translations/language.svelte";
 
   let dialogText = $state("");
   let dialog = $state<HTMLDialogElement>()!;
@@ -18,7 +19,7 @@
 
   $effect(() => {
     if (game.gameState === "won" && !inTutorial) {
-      openModal("You win!");
+      openModal(t("game.win"));
     }
   });
 
@@ -65,7 +66,7 @@
       <h2>{dialogText}</h2>
       <Button size="1.25rem" href="/">
         <Icon name="arrow_back" size={24} />
-        <span>Menu</span>
+        <span>{t("game.menu")}</span>
       </Button>
       <Button
         size="1.25rem"
@@ -75,7 +76,7 @@
         }}
       >
         <Icon name="autorenew" size={24} />
-        <span>Restart</span>
+        <span>{t("game.restart")}</span>
       </Button>
     </div>
   </dialog>
@@ -99,37 +100,30 @@
       <div class="tutorial">
         <p>
           {#if tutorialStage === 0}
-            The goal of the game is to fill all the squares with appropreate
-            colors.
+            {t("game.tutorial.stage1")}
           {:else if tutorialStage === 1}
-            The 4 in the corner indicates that all of its neighbours including
-            itself are&nbsp<strong class="active">active</strong>. Fill them in!
+            {@html t("game.tutorial.stage2")}
           {:else if tutorialStage === 2}
-            Now the 2 has all&nbsp<strong class="active">active</strong> tiles
-            satisfied so the rest of the neighbouring tiles are&nbsp<strong
-              class="inactive"
-            >
-              inactive
-            </strong>.
+            {@html t("game.tutorial.stage3")}
           {:else if tutorialStage === 3}
-            Fill in the rest of the squares and finish the puzzle.
+            {t("game.tutorial.stage4")}
           {/if}
         </p>
         <div class="buttons">
-          <Button onclick={finishTutorial}>Skip the Tutorial</Button>
+          <Button onclick={finishTutorial}>{t("game.tutorial.skip")}</Button>
           {#if tutorialStage >= 3}
             <Button
               disabled={!game.isTutorialStageSolved(tutorialStage)}
               onclick={finishTutorial}
             >
-              Finish
+              {t("game.tutorial.finish")}
             </Button>
           {:else}
             <Button
               disabled={!game.isTutorialStageSolved(tutorialStage)}
               onclick={nextTutorialStage}
             >
-              Continue
+              {t("game.tutorial.continue")}
             </Button>
           {/if}
         </div>
@@ -147,21 +141,11 @@
     display: grid;
     padding: 0.5rem;
     p {
+      margin: 0;
+      margin-bottom: .5rem;
       text-align: justify;
-      font-size: 1.25rem;
-      height: 3lh;
-      strong.active {
-        color: var(--color-bas);
-        background-color: var(--color-acc);
-        padding: 0px 6px;
-        border-radius: 100vw;
-      }
-      strong.inactive {
-        color: var(--color-for);
-        background-color: var(--color-sec);
-        padding: 0px 6px;
-        border-radius: 100vw;
-      }
+      font-size: 1rem;
+      height: 4lh;
     }
     .buttons {
       display: flex;

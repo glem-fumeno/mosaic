@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
   import { page } from "$app/state";
   import { sleep } from "$lib/utils";
+  import t from "$lib/translations/language.svelte";
 
   let loading = $state<boolean>(true);
   onMount(async () => {
@@ -46,7 +47,7 @@
 
 {#if loading}
   <div class="loader">
-    <h1>Loading...</h1>
+    <h1>{t("menu.loading")}</h1>
   </div>
 {/if}
 <div
