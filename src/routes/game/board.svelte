@@ -1,6 +1,5 @@
 <script lang="ts">
-  import game, { getNeighbouringTiles } from "$lib/game.svelte";
-  import type { Tile } from "$lib/types";
+  import game from "$lib/state/game.svelte";
 
   let width = $derived<number>(game.board.length);
 
@@ -18,20 +17,6 @@
         });
     }
   }
-
-  function getTileStatus(tile: Tile): "error" | "solved" | "none" {
-    const { active, inactive, disabled } = getNeighbouringTiles(
-      game.board,
-      tile,
-    );
-
-    if (tile.num === undefined) return "none";
-    if (active.length > tile.num) return "error";
-    if (inactive.length > tile.neighbours.length - tile.num) return "error";
-    if (disabled.length === 0) return "solved";
-
-    return "none";
-  }
 </script>
 
 <div
@@ -46,7 +31,7 @@
       class={`
         tile ${tile.state}
         old-${tile.oldState}
-        status-${getTileStatus(tile)}
+        status-${game.getTileStatus(tile)}
       `}
       data-x={tile.position.x}
       data-y={tile.position.y}

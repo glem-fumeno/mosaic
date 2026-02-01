@@ -1,9 +1,5 @@
-import type { Tile, TileState } from "$lib/types";
-import { getNeighbouringTiles } from "./game.svelte";
-
-function random(max: number) {
-  return Math.floor(Math.random() * max);
-}
+import type { Position, Tile, TileState } from "$lib/types";
+import { random } from "./utils";
 
 let chances: Record<number, number> = {
   9: 95,
@@ -17,6 +13,30 @@ let chances: Record<number, number> = {
   1: 0,
 };
 
+export function getNeighbouringTiles(
+  tiles: Tile[][],
+  tile: Tile,
+): {
+  active: Position[];
+  inactive: Position[];
+  disabled: Position[];
+} {
+  const active = tile.neighbours.filter(
+    ({ x, y }) => tiles[y][x].state === "active",
+  );
+  const inactive = tile.neighbours.filter(
+    ({ x, y }) => tiles[y][x].state === "inactive",
+  );
+  const disabled = tile.neighbours.filter(
+    ({ x, y }) => tiles[y][x].state === "disabled",
+  );
+  return {
+    active,
+    inactive,
+    disabled,
+  };
+}
+
 export function reset(width: number): Tile[][] {
   let tiles: Tile[][] = [];
   tiles.length = 0;
@@ -29,7 +49,7 @@ export function reset(width: number): Tile[][] {
         state: "disabled",
         innerState: "disabled",
         neighbours: [],
-        locked: false
+        locked: false,
       };
       for (let i = Math.max(y - 1, 0); i < Math.min(y + 2, width); i++) {
         for (let j = Math.max(x - 1, 0); j < Math.min(x + 2, width); j++) {

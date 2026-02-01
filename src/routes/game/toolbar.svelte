@@ -1,6 +1,6 @@
 <script lang="ts">
-  import game from "$lib/game.svelte";
-  import Icon from "$lib/icon.svelte";
+  import game from "$lib/state/game.svelte";
+  import Icon from "$lib/components/icon.svelte";
 </script>
 
 <div class="buttons">

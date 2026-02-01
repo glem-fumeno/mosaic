@@ -1,6 +1,6 @@
-import { reset } from "./mosaic";
+import { getNeighbouringTiles, reset } from "$lib/mosaic";
 import settings from "./settings.svelte";
-import type { Position, Tile, TileState } from "./types";
+import type { Tile, TileState } from "$lib/types";
 
 let board = $state<Tile[][]>([]);
 let currentTool = $state<TileState>("active");
@@ -32,30 +32,6 @@ const tutorialStages = [
     [0, 0, 0],
   ],
 ];
-
-export function getNeighbouringTiles(
-  tiles: Tile[][],
-  tile: Tile,
-): {
-  active: Position[];
-  inactive: Position[];
-  disabled: Position[];
-} {
-  const active = tile.neighbours.filter(
-    ({ x, y }) => tiles[y][x].state === "active",
-  );
-  const inactive = tile.neighbours.filter(
-    ({ x, y }) => tiles[y][x].state === "inactive",
-  );
-  const disabled = tile.neighbours.filter(
-    ({ x, y }) => tiles[y][x].state === "disabled",
-  );
-  return {
-    active,
-    inactive,
-    disabled,
-  };
-}
 
 const game = {
   get board() {
@@ -144,6 +120,16 @@ const game = {
       return window.localStorage.removeItem(`tiles ${settings.boardSize}`);
     }
   },
+  getTileStatus(tile: Tile): "error" | "solved" | "none" {
+    const { active, inactive, disabled } = getNeighbouringTiles(game.board, tile);
+
+    if (tile.num === undefined) return "none";
+    if (active.length > tile.num) return "error";
+    if (inactive.length > tile.neighbours.length - tile.num) return "error";
+    if (disabled.length === 0) return "solved";
+
+    return "none";
+  }
 };
 
 export default game;

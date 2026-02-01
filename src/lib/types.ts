@@ -10,7 +10,7 @@ export type Color =
 
 export type Page = "/" | "/game" | "/settings" | "/info";
 
-export type Language = "English" | "Polski"
+export type Language = "English" | "Polski";
 
 export type TileState = "active" | "inactive" | "disabled";
 

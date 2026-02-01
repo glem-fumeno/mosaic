@@ -2,7 +2,7 @@
   import "./app.css";
   let { children } = $props();
   import { afterNavigate, goto, onNavigate } from "$app/navigation";
-  import settings from "$lib/settings.svelte";
+  import settings from "$lib/state/settings.svelte";
   import { onMount } from "svelte";
   import { page } from "$app/state";
   import { sleep } from "$lib/utils";

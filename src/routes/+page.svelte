@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Button from "$lib/button.svelte";
-  import game from "$lib/game.svelte";
-  import settings from "$lib/settings.svelte";
+  import Button from "$lib/components/button.svelte";
+  import game from "$lib/state/game.svelte";
+  import settings from "$lib/state/settings.svelte";
   import t from "$lib/translations/language.svelte";
   import { onMount } from "svelte";
 

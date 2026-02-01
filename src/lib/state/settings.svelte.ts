@@ -1,5 +1,5 @@
-import { setLanguage } from "./translations/language.svelte";
-import type { Color, Theme, Page, Language } from "./types";
+import { setLanguage } from "$lib/translations/language.svelte";
+import type { Color, Theme, Page, Language } from "$lib/types";
 
 let theme = $state<Theme>("dark");
 let color = $state<Color>("purple");

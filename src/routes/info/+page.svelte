@@ -1,20 +1,12 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import Button from "$lib/button.svelte";
-  import Icon from "$lib/icon.svelte";
-  import settings from "$lib/settings.svelte";
+  import Button from "$lib/components/button.svelte";
+  import settings from "$lib/state/settings.svelte";
+  import Titlebar from "$lib/components/titlebar.svelte";
   import t from "$lib/translations/language.svelte";
 </script>
 
-<header>
-  <Button onclick={() => history.back()}>
-    <Icon name="arrow_back" />
-  </Button>
-  <div class="h1-wrapper">
-    <h1>{t("info.title")}</h1>
-  </div>
-  <div class="placeholder"></div>
-</header>
+<Titlebar title={t("info.title")} />
 <main>
   <h2>{t("info.howToPlay.title")}</h2>
   <p>
@@ -64,27 +56,6 @@
 </main>
 
 <style>
-  header {
-    display: flex;
-    background-color: var(--color-bac);
-    padding: 4rem 0.5rem 0.25rem 0.5rem;
-    box-sizing: border-box;
-    margin-bottom: 1.5rem;
-    align-items: center;
-
-    .h1-wrapper {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-    }
-
-    h1 {
-      text-align: center;
-      margin: 0;
-      view-transition-name: header;
-      margin-right: 56px;
-    }
-  }
   main {
     padding: 0.5rem;
     text-align: justify;
