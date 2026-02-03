@@ -6,13 +6,18 @@
     size = "1rem",
     active = false,
     disabled = false,
+    primary = false,
   } = $props();
 </script>
 
 {#if href !== undefined}
   <a
     href={disabled ? undefined : href}
-    class="{active ? 'active' : ''} {disabled ? 'disabled' : ''}"
+    class="
+      {active ? 'active' : ''}
+      {disabled ? 'disabled' : ''}
+      {primary ? 'primary' : ''}
+    "
     style:font-size={size}
   >
     {@render children()}
@@ -21,7 +26,11 @@
   <button
     {onclick}
     {disabled}
-    class="{active ? 'active' : ''} {disabled ? 'disabled' : ''}"
+    class="
+      {active ? 'active' : ''}
+      {disabled ? 'disabled' : ''}
+      {primary ? 'primary' : ''}
+    "
     style:font-size={size}
   >
     {@render children()}
@@ -52,6 +61,11 @@
     &:hover,
     &:active {
       background-color: var(--color-sur);
+    }
+    &.primary {
+      color: var(--color-bac);
+      border: 2px solid var(--color-acc);
+      background-color: var(--color-acc);
     }
     &.disabled {
       border: 2px solid var(--color-bac);

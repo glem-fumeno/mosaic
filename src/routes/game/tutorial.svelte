@@ -38,6 +38,7 @@
       <Button
         disabled={!game.isTutorialStageSolved(tutorialStage)}
         onclick={finishTutorial}
+        primary
       >
         {t("game.tutorial.finish")}
       </Button>
@@ -45,6 +46,7 @@
       <Button
         disabled={!game.isTutorialStageSolved(tutorialStage)}
         onclick={nextTutorialStage}
+        primary
       >
         {t("game.tutorial.continue")}
       </Button>
