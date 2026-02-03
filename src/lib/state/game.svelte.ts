@@ -124,8 +124,8 @@ const game = {
     const { active, inactive, disabled } = getNeighbouringTiles(game.board, tile);
 
     if (tile.num === undefined) return "none";
-    if (active.length > tile.num) return "error";
-    if (inactive.length > tile.neighbours.length - tile.num) return "error";
+    if (active > tile.num) return "error";
+    if (inactive > tile.neighbours.length - tile.num) return "error";
     if (disabled.length === 0) return "solved";
 
     return "none";

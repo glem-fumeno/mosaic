@@ -3,12 +3,12 @@ import { random } from "./utils";
 
 let chances: Record<number, number> = {
   9: 95,
-  8: 90,
-  7: 80,
-  6: 70,
-  5: 60,
-  4: 30,
-  3: 20,
+  8: 70,
+  7: 60,
+  6: 80,
+  5: 30,
+  4: 20,
+  3: 10,
   2: 5,
   1: 0,
 };
@@ -17,19 +17,26 @@ export function getNeighbouringTiles(
   tiles: Tile[][],
   tile: Tile,
 ): {
-  active: Position[];
-  inactive: Position[];
+  active: number;
+  inactive: number;
   disabled: Position[];
 } {
-  const active = tile.neighbours.filter(
-    ({ x, y }) => tiles[y][x].state === "active",
-  );
-  const inactive = tile.neighbours.filter(
-    ({ x, y }) => tiles[y][x].state === "inactive",
-  );
-  const disabled = tile.neighbours.filter(
-    ({ x, y }) => tiles[y][x].state === "disabled",
-  );
+  let active = 0;
+  let inactive = 0;
+  const disabled: Position[] = [];
+  tile.neighbours.forEach(({ x, y }) => {
+    switch (tiles[y][x].state) {
+      case "active":
+        active++;
+        break;
+      case "inactive":
+        inactive++;
+        break;
+      case "disabled":
+        disabled.push({ x, y });
+        break;
+    }
+  });
   return {
     active,
     inactive,
@@ -111,7 +118,7 @@ export function reset(width: number): Tile[][] {
     });
   }
   tiles.flat().forEach((tile) => {
-    // console.log(isSolvable(tiles));
+    if (tile.num === undefined) return;
     let tmp = tile.num;
     tile.num = undefined;
     if (!isSolvable(tiles)) {
@@ -122,7 +129,6 @@ export function reset(width: number): Tile[][] {
 }
 export function isSolvable(tiles: Tile[][]) {
   let changed = true;
-  tiles = structuredClone(tiles);
   while (
     !tiles.flat().every((tile) => tile.innerState === tile.state) &&
     changed
@@ -132,22 +138,24 @@ export function isSolvable(tiles: Tile[][]) {
       const { active, inactive, disabled } = getNeighbouringTiles(tiles, tile);
       if (disabled.length < 1) return;
 
-      if (disabled.length + active.length === tile.num) {
-        disabled.forEach((pos) => {
-          tiles[pos.y][pos.x].state = "active";
+      if (disabled.length + active === tile.num) {
+        disabled.forEach(({ x, y }) => {
+          tiles[y][x].state = "active";
         });
         changed = true;
+        return;
       }
-      if (
-        -(disabled.length + inactive.length) + tile.neighbours.length ===
-        tile.num
-      ) {
-        disabled.forEach((pos) => {
-          tiles[pos.y][pos.x].state = "inactive";
+      if (-(disabled.length + inactive) + tile.neighbours.length === tile.num) {
+        disabled.forEach(({ x, y }) => {
+          tiles[y][x].state = "inactive";
         });
         changed = true;
+        return;
       }
     });
   }
+  tiles.flat().forEach((tile) => {
+    tile.state = "disabled";
+  });
   return changed;
 }
