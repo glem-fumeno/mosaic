@@ -3,6 +3,9 @@ import settings from "./settings.svelte";
 import type { Tile, TileState } from "$lib/types";
 
 let board = $state<Tile[][]>([]);
+let errors = $state<number>(0);
+let timer = $state<number>(0);
+let pauseTimer = $state(() => {});
 let currentTool = $state<TileState>("active");
 let gameState = $state<"running" | "won">("running");
 const tutorialBoard: { s: TileState; n?: number }[][] = [
@@ -37,22 +40,47 @@ const game = {
   get board() {
     return board;
   },
+  get errors() {
+    return errors;
+  },
+  get timer() {
+    let minutes = Math.floor(timer / 60).toString();
+    let seconds = (timer % 60).toString();
+
+    if (+seconds < 10) seconds = `0${seconds}`;
+    if (+minutes < 10) minutes = `0${minutes}`;
+    return `${minutes}:${seconds}`;
+  },
   get currentTool() {
     return currentTool;
   },
   get gameState() {
     return gameState;
   },
+  setTimer() {
+    const interval = setInterval(() => {
+      timer++;
+    }, 1000);
+    pauseTimer = () => clearInterval(interval);
+  },
+  stopTimer() {
+    pauseTimer();
+  },
   resetGrid() {
-    window.localStorage.removeItem(`tiles ${settings.boardSize}`);
+    localStorage.removeItem(`tiles ${settings.boardSize}`);
+    localStorage.removeItem(`errors ${settings.boardSize}`);
+    localStorage.removeItem(`timer ${settings.boardSize}`);
     board = reset(settings.boardSize);
     gameState = "running";
+    errors = 0;
+    timer = 0;
+    pauseTimer();
+    this.setTimer();
   },
   saveTiles() {
-    window.localStorage.setItem(
-      `tiles ${settings.boardSize}`,
-      JSON.stringify(board),
-    );
+    localStorage.setItem(`tiles ${settings.boardSize}`, JSON.stringify(board));
+    localStorage.setItem(`errors ${settings.boardSize}`, errors.toString());
+    localStorage.setItem(`timer ${settings.boardSize}`, timer.toString());
   },
   loadTutorialStage(stage: number) {
     let newBoard = structuredClone($state.snapshot(board));
@@ -88,11 +116,13 @@ const game = {
   },
   loadTiles() {
     settings.loadSettings();
-    const tiles = window.localStorage.getItem(`tiles ${settings.boardSize}`);
+    const tiles = localStorage.getItem(`tiles ${settings.boardSize}`);
     if (tiles === null) return this.resetGrid();
     const newBoard = JSON.parse(tiles);
     if (newBoard.length != settings.boardSize) return this.resetGrid();
     board = newBoard;
+    errors = +(localStorage.getItem(`errors ${settings.boardSize}`) ?? 0);
+    timer = +(localStorage.getItem(`timer ${settings.boardSize}`) ?? 0);
     board.flat().forEach((tile) => (tile.oldState = "disabled"));
     gameState = "running";
   },
@@ -105,6 +135,9 @@ const game = {
     if (tile.state === currentTool) return;
     tile.oldState = tile.state;
     tile.state = currentTool;
+    if (tile.state !== "disabled" && tile.state !== tile.innerState) {
+      errors++;
+    }
   },
   setGameState(newGameState: "running" | "won") {
     gameState = newGameState;
@@ -112,16 +145,25 @@ const game = {
   updateGameState() {
     game.saveTiles();
     if (gameState === "won") {
-      return window.localStorage.removeItem(`tiles ${settings.boardSize}`);
+      localStorage.removeItem(`tiles ${settings.boardSize}`);
+      localStorage.removeItem(`errors ${settings.boardSize}`);
+      localStorage.removeItem(`timer ${settings.boardSize}`);
+      return;
     }
 
     if (game.board.flat().every((tile) => tile.innerState === tile.state)) {
       gameState = "won";
-      return window.localStorage.removeItem(`tiles ${settings.boardSize}`);
+      localStorage.removeItem(`tiles ${settings.boardSize}`);
+      localStorage.removeItem(`errors ${settings.boardSize}`);
+      localStorage.removeItem(`timer ${settings.boardSize}`);
+      return;
     }
   },
   getTileStatus(tile: Tile): "error" | "solved" | "none" {
-    const { active, inactive, disabled } = getNeighbouringTiles(game.board, tile);
+    const { active, inactive, disabled } = getNeighbouringTiles(
+      game.board,
+      tile,
+    );
 
     if (tile.num === undefined) return "none";
     if (active > tile.num) return "error";
@@ -129,7 +171,7 @@ const game = {
     if (disabled.length === 0) return "solved";
 
     return "none";
-  }
+  },
 };
 
 export default game;

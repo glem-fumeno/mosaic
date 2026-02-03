@@ -1,4 +1,6 @@
 const en = {
+  yes: "Yes",
+  no: "No",
   menu: {
     loading: "Loading...",
     continue: "Continue",
@@ -12,7 +14,8 @@ const en = {
     theme: "Theme:",
     language: "Language:",
     color: "Color:",
-    gridSize: "Grid Size:",
+    gridSize: "Grid size:",
+    timerShown: "Show an in-game timer:",
   },
   info: {
     title: "Info",
@@ -63,6 +66,8 @@ const en = {
     win: "You win!",
     menu: "Menu",
     restart: "Restart",
+    mistakes: "Mistakes:",
+    time: "Time:",
   },
 };
 

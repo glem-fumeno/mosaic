@@ -7,6 +7,7 @@ let language = $state<Language>("English");
 let boardSize = $state(6);
 let preloadedPages = $state<Page[]>([]);
 let tutorialFinished = $state<boolean>(false);
+let timerShown = $state<boolean>(true);
 
 const settings = {
   get preloadedPages() {
@@ -26,6 +27,9 @@ const settings = {
   },
   get tutorialFinished() {
     return tutorialFinished;
+  },
+  get timerShown() {
+    return timerShown;
   },
   addPreloadedPage(page: Page) {
     preloadedPages.push(page);
@@ -63,12 +67,17 @@ const settings = {
     tutorialFinished = newTutorialFinished;
     this.saveSettings();
   },
+  setTimerShown(newTimerShown: boolean) {
+    timerShown = newTimerShown;
+    this.saveSettings();
+  },
   saveSettings() {
     localStorage.setItem("theme", theme);
     localStorage.setItem("color", color);
     localStorage.setItem("boardSize", boardSize.toString());
     localStorage.setItem("language", language);
     localStorage.setItem("tutorialFinished", tutorialFinished.toString());
+    localStorage.setItem("timerShown", timerShown.toString());
   },
   loadSettings() {
     theme = (localStorage.getItem("theme") ?? "dark") as Theme;
@@ -76,6 +85,7 @@ const settings = {
     boardSize = +(localStorage.getItem("boardSize") ?? "6");
     language = (localStorage.getItem("language") ?? "English") as Language;
     tutorialFinished = localStorage.getItem("tutorialFinished") === "true";
+    timerShown = localStorage.getItem("timerShown") !== "false";
     setLanguage(language);
   },
 };

@@ -1,4 +1,6 @@
 const pl = {
+  yes: "Tak",
+  no: "Nie",
   menu: {
     loading: "Ładowanie...",
     continue: "Kontynuuj",
@@ -13,6 +15,7 @@ const pl = {
     language: "Język:",
     color: "Kolor:",
     gridSize: "Rozmiar planszy:",
+    timerShown: "Pokaż stoper w trakcie gry:",
   },
   info: {
     title: "O aplikacji",
@@ -32,7 +35,7 @@ const pl = {
     },
     credits: {
       title: "Źródła:",
-      madeBy: "Zrobione przez:",
+      madeBy: "Stworzone przez:",
       originalIdeaBy: "Oryginalny pomysł:",
       font: "Czcionka:",
       icons: "Ikony:",
@@ -64,6 +67,8 @@ const pl = {
     win: "Wygrana!",
     menu: "Menu",
     restart: "Restart",
+    mistakes: "Błędy:",
+    time: "Czas:",
   },
 };
 

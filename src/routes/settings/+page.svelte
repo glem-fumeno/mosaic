@@ -54,6 +54,17 @@
       </button>
     {/each}
   </div>
+  <span>{t("settings.timerShown")}</span>
+  <div class="buttons">
+    {#each [true, false] as timerShown}
+      <button
+        class:active={settings.timerShown === timerShown}
+        onclick={() => settings.setTimerShown(timerShown)}
+      >
+        {t(timerShown ? "yes" : "no")}
+      </button>
+    {/each}
+  </div>
 </main>
 
 <style>
